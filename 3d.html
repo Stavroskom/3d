@@ -1,0 +1,95 @@
+<html>
+	<head> 
+		<title>3d shape</title>
+		<style type="text/css">
+			canvas{
+				width:100%;
+				height:25%;
+				background-color:green;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas></canvas>
+		<script type="text/javascript">
+			var cnv=document.getElementsByTagName("canvas")[0]
+			var ctx=cnv.getContext("2d")
+			var Vwidth=5
+			var Vheight=5
+			var prm=[[1,0,0],
+					 [0,1,0],
+					 [0,0,1]]
+			var verts=[[-5,-5,-5],[5,-5,-5]
+					  ,[-5,5,-5],[5,5,-5],[-5,-5,5],[5,-5,5]
+					  ,[-5,5,5],[5,5,5]]
+			var projectedvs=[]
+			function mult(a,b){
+			if(a[0].length!=b.length){
+				return(0)
+			}
+			var sum=0
+			var result=0
+			var result2=[]
+			for(let k=0;k< b[0].length;k++){
+				for(let i=0;i< a.length;i++){
+					for(let j=0;j< a[i].length;j++){
+						sum+=a[i][j]*b[j][k]
+					}
+
+					result=sum
+					sum=0
+				}
+				result2[k]=result
+				result=[]
+			}
+				return(result2)
+			}
+			/*var a=[[90,90,0]]
+			      ,[0,8,7]
+			      ,[3,8,9]]
+			var b=[[1,0,0]
+				  ,[0,1,0]
+				  ,[0,0,1]]*/
+     function projection(a,b){
+         return mult(a,b)
+     }
+     var th=0.01
+     console.log(typeof(verts[1][2]),verts)
+     for(let i=0;i< verts.length;i++){
+         verts[i]=projection([verts[i]],prm)
+         console.log(verts[i])
+     }
+     console.log(typeof(verts[1][1]),verts)
+     function rotation(){
+        let rmy=[[Math.cos(th),0,Math.sin(th)],
+                [0,1,0],
+                [-1*Math.sin(th),0,Math.cos(th)]]
+        let rmx=[[1,0,0],
+                [0,Math.cos(th),-1*Math.sin(th)],
+                [0,Math.sin(th),Math.cos(th)]]
+          let rmz=[[Math.cos(th),Math.sin(th),0],
+					 [-1*Math.sin(th),Math.cos(th),0],
+					 [0,0,1]]
+         for(let i=0;i< verts.length;i++){
+             //th+=0.000001
+             verts[i]=mult([verts[i]],rmx)
+         }
+     }
+     //projectedvs[1][2]+=10
+			function drawf(){
+				for(let i=0;i< verts.length;i++){
+				   //projectedvs.x+=0
+		  ctx.fillRect(verts[i][0]+20,verts[i][1]+20,3,3)
+				}
+				rotation()
+			}
+			function clearf(){
+				ctx.clearRect(0,0,1000,1000)
+			}
+			var drawint= setInterval(drawf,10)
+			var clearint=setInterval(clearf,11)
+		</script>
+		<!--[2,3,5]   [5,8,4] <br>
+		[0,8,7]  [3,2,8] <br>[3,8,9]..........      [6,5,8]-->
+	</body> 
+</html>
