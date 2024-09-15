@@ -5,7 +5,7 @@
 			canvas{
 				width:100%;
 				height:25%;
-				background-color:green;
+				background-color:white;
 			}
 		</style>
 	</head>
@@ -16,9 +16,9 @@
 			var ctx=cnv.getContext("2d")
 			var Vwidth=5
 			var Vheight=5
-			var prm=[[1,0,0],
-					 [0,1,0],
-					 [0,0,1]]
+			var rotated=[]
+			var projected=[]
+			var distance=10
 			var verts=[[-5,-5,-5],[5,-5,-5]
 					  ,[-5,5,-5],[5,5,-5],[-5,-5,5],[5,-5,5]
 					  ,[-5,5,5],[5,5,5]]
@@ -50,15 +50,15 @@
 			var b=[[1,0,0]
 				  ,[0,1,0]
 				  ,[0,0,1]]*/
-     function projection(a,b){
+     /*function projection(a,b){
          return mult(a,b)
-     }
+     }*/
      var th=0.01
      console.log(typeof(verts[1][2]),verts)
-     for(let i=0;i< verts.length;i++){
+     /*for(let i=0;i< verts.length;i++){
          verts[i]=projection([verts[i]],prm)
-         console.log(verts[i])
-     }
+         //console.log(verts[i])
+     }*/
      console.log(typeof(verts[1][1]),verts)
      function rotation(){
         let rmy=[[Math.cos(th),0,Math.sin(th)],
@@ -71,23 +71,42 @@
 					 [-1*Math.sin(th),Math.cos(th),0],
 					 [0,0,1]]
          for(let i=0;i< verts.length;i++){
-             //th+=0.000001
-             verts[i]=mult([verts[i]],rmx)
+             th+=0.001
+             rotated[i]=mult([verts[i]],rmx)
+             //console.log(rotated[i])
+         }
+         for(let i=0;i<rotated.length;i++){
+         let projection= 10/(distance-rotated[i][2])
+         let prm=[[projection,0,0],
+         [0,projection,0],
+         [0,0,10]]
+         projected[i]=mult([rotated[i]],prm)
+         //console.log(projected)
          }
      }
      //projectedvs[1][2]+=10
+     /*function makeline(a,b){
+     	let line=Math.round((Math.abs(a[0]-b[0])/Math.abs(a[1]-b[1]))+1)
+     }*/
 			function drawf(){
-				for(let i=0;i< verts.length;i++){
-				   //projectedvs.x+=0
-		  ctx.fillRect(verts[i][0]+20,verts[i][1]+20,3,3)
+			    clearf()
+			    rotation()
+				for(let i=0;i< projected.length;i++){
+					//verts[i][0]= verts[i][0]/verts[i][2]
+					//console.log(verts)
+				    //projectedvs.x+=0
+				    //ctx.fillstyle ="white"
+				    //verts[i][0]/=verts[i][2]
+				    //console.log(rotated[i])
+		  			ctx.fillRect(projected[i][0]+100,projected[i][1]+100,3,3)
 				}
-				rotation()
 			}
 			function clearf(){
 				ctx.clearRect(0,0,1000,1000)
 			}
+			//alert("1+1")
 			var drawint= setInterval(drawf,10)
-			var clearint=setInterval(clearf,11)
+			//var clearint=setInterval(clearf,11)
 		</script>
 		<!--[2,3,5]   [5,8,4] <br>
 		[0,8,7]  [3,2,8] <br>[3,8,9]..........      [6,5,8]-->
